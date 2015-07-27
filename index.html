@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+
+  <style type="text/css">
+
+    h2 {
+
+      text-align: center;
+      font-family: verdana;
+
+    }
+    #chartContainer {
+      
+      text-align: center;
+      
+    }
+
+    #introduction, #para1, #para2 {
+      
+      font-family: verdana;
+      font-size: 15px;
+      margin-left: 15%;
+      margin-right: 15%;
+      text-align: left;
+    }
+
+    #list {
+
+      font-family: verdana;
+      font-size: 15px;
+      margin-left: 15%;
+      margin-right: 8%;
+      text-align: left;
+
+
+    }
+
+  </style>
+
+  <section id="content"></section>
+
+  <section id="introduction">
+    <p>
+      The number of people who visit American national parks is mind boggling. In 2014 alone, it was nearly 70 million. 
+      Wonder which parks are the most popular? Here are the top ten based on the article published on National Geogrpahic
+      <a href = "http://travel.nationalgeographic.com/travel/national-parks/most-visited-parks-photo">Top 10 Most Visited National Parks in the US</a>
+    </p>
+
+  </section>
+    
+  <section id="list">
+    <ol>
+      <li>Great Smoky Mountains National Park</li>
+      <li>Grand Canyon National Park</li>
+      <li>Yosemite National Park</li>
+      <li>Yellowstone National Park</li>
+      <li>Rocky Mountain National Park</li>
+      <li>Olympic National Park</li>
+      <li>Zion National Park</li>
+      <li>Grand Teton National Park</li>
+      <li>Acadia National Park</li>
+      <li>Glacier National Park</li>
+    </ol>
+  </section>
+
+  <section id="para1">
+    <p>
+      Sitting comfortably at number one, Great Smoky Mountains NP attracts more than 10 million people annually, which is more than twice the number of visitors that visited Grand Canyon NP, at number two [4.8 million in 2014]. Both have unique features, one exhibits mountain-skimming scenic highway along with more than 800 miles of hiking trails while the other offers one of the worlds largest canyon at close to a mile in depth and up to 18 miles in width.
+    </p>
+    <p>
+      The two Y's, Yosemite and Yellowstone NPs attract close to 3.5 millions people annually with Yosemite offering great views of the 7 mile, river cut, canyon while Yellowstone offering explosive geysers and wealth of wild animals as is bison, bear and moose. Rocky Mountain National Park in Colorado displays sweeping vistas with close to 150 lakes and 450 miles of wetland streams. Olympic NP in Washington State is unique in a way that no road crosses through the park, which contains distinct ecosystems: temperate rain forest, wildflower meadows and rugged Pacific coast line.
+    </p>
+    <p>
+      Rising in Utah's plateau country, Zion NP attracts close to 3.2 million visitors a year towards its sandstone canyons and sharp cliffs. Grand Tetons, on the other hand stand nearly at 7,000 feet above the valley floor attracting more than 2.8 million poeple towards its white glaciers and granite pinnacles. Acadia on the Atlantic coast is home to one of the best coves in the US while Glacier NP on the other side of the country in Montana exhibits one of the worlds most spectacular drives in Going-to-the-Sun road.
+    </p>
+    <p>
+      The visualization below compares the visitors that visited these parks in the past 20 years. Chart only focuses on the recreational visitors as they take the major chunk of the total visitors. The data used for comparison and analysis is taken from the <a href = " https://irma.nps.gov/Stats/">National Park Service - Data Archives</a>.
+    </p>
+    <p>
+    The interactive legend will help filter the parks and hovering over the yearly node will display with monthly visitation details along with useful park information. NOTE: NP is used as an abbreviation for National Park.
+    </p>
+  </section>
+
+
+
+
+
+  </br>
+
+  <div id="chartContainer">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.1.6.min.js"></script>
+    <script type="text/javascript">
+      var svg = dimple.newSvg("#chartContainer", 1000, 500);
+
+        // Append title
+        d3.select('#content')
+          .append('h2')
+          .attr('id', 'title')
+          .text('Top 10 Most Visited National Parks in US, 1995-2014');
+
+              
+        // Loading the data file and applying it to function for displaying the visualization
+        d3.tsv("parkdata_final.tsv", function (data) {
+         
+          // Creating and positioning the main chart
+          var myChart = new dimple.chart(svg, data);
+          myChart.setBounds(60, 35, 880, 350)
+
+          // The chart to show in a tooltip - details later in the code
+          var tipChart = null;
+          // The other popup shapes - detials later in the code
+          var popup = null;
+
+
+          // Adding the main chart x axis
+          var x = myChart.addCategoryAxis("x", "Year");
+
+          //var x = myChart.addTimeAxis('x', 'Year');
+          //x.tickFormat = '%Y';
+          //x.ticks = 5;
+          //x.title = 'Year';
+
+          // Adding the main chart y axis
+          myChart.addMeasureAxis("y", "Recreation Visitors");
+          
+
+           // Creating standard line and bubble charts of National Parks by Years and Recreation Visitors
+          // lines and bubbles are colored by Parks as that will be the key in the interactive legend
+
+
+          // Line charts colored by Parks
+          var lines = myChart.addSeries(["Park"], dimple.plot.line); 
+          //lines.lineMarkers= true;
+          lines.lineWeight = 1;
+
+          // Bubble charts - additional series information inserted to be used later in tooltip charts
+          var bubble = myChart.addSeries(["State", "Area", "Year", "Total Visitors","Park"], dimple.plot.bubble); 
+         
+
+          // Tooltip Section
+
+          // Handle the hover event - overriding the default behaviour
+          bubble.addEventHandler("mouseover", onHover);
+          // Handle the leave event - overriding the default behaviour
+          bubble.addEventHandler("mouseleave", onLeave);
+
+
+          // Displaying the Legend
+          var myLegend = myChart.addLegend(120, 440, 900, 20);
+          //myChart.ease = "bounce";
+          
+          // Drawing the initial Line/Bubble chart
+          myChart.draw(500);
+          
+          // Function defined to handle mouse enter
+          function onHover(e) {
+            
+            // Getting the properties of the selected bubble
+            var cx = parseFloat(e.selectedShape.attr("cx")),
+                cy = parseFloat(e.selectedShape.attr("cy")),
+                fill = e.selectedShape.attr("fill"),
+                stroke = e.selectedShape.attr("stroke");
+                
+            // Defining the Tooltip Popup
+
+            // Setting the size and position of the popup
+            var width = 200,
+                height = 150,
+                x = (cx + width + 20 < svg.attr("width") ?
+                      cx + 10 :
+                      cx - width - 20);
+                y = (cy - height / 2 < 0 ?
+                      15 :
+                      cy - height / 2);
+                    
+            // Fading the popup fill mixing the shape fill with 80% white
+            var popupFillColor = d3.rgb(
+                        d3.rgb(fill).r + 0.8 * (255 - d3.rgb(fill).r),
+                        d3.rgb(fill).g + 0.8 * (255 - d3.rgb(fill).g),
+                        d3.rgb(fill).b + 0.8 * (255 - d3.rgb(fill).b)
+                    );
+            
+            // Creating a group for the popup objects
+            popup = svg.append("g");
+            
+            // Adding a rectangle surrounding the chart
+            popup
+              .append("rect")
+              .attr("x", x + 5)
+              .attr("y", y - 5)
+              .attr("width", width)
+              .attr("height", height)
+              .attr("rx", 5)
+              .attr("ry", 5)
+              .style("fill", popupFillColor)
+              .style("stroke", stroke)
+              .style("stroke-width", 2);
+            
+            // Add the series value text for State, Area, Year and Total Visitors informattion
+            popup
+              .append("text")
+              .attr("x", x + 10)
+              .attr("y", y + 5)
+              .text("Park : " + e.seriesValue[4])
+              .style("font-family", "sans-serif")
+              .style("font-size", 9)
+              .style("fill", stroke);
+
+            popup
+              .append("text")
+              .attr("x", x + 10)
+              .attr("y", y + 13)
+              .text("State : " + e.seriesValue[0])
+              .style("font-family", "sans-serif")
+              .style("font-size", 9)
+              .style("fill", stroke);
+
+            popup
+              .append("text")
+              .attr("x", x + 10)
+              .attr("y", y + 21)
+              .text("Area : " + e.seriesValue[1])
+              .style("font-family", "sans-serif")
+              .style("font-size", 9)
+              .style("fill", stroke);
+            
+            
+            popup
+              .append("text")
+              .attr("x", x + 10)
+              .attr("y", y + 29)
+              .text("Annual Visitors : " + (e.seriesValue[3]/1000000).toFixed(1) + "m")
+              .style("font-family", "sans-serif")
+              .style("font-size", 9)
+              .style("font-weight", "900")
+              .style("fill", stroke);
+            
+
+            
+            // Filtering the data for the selected Park and Year
+            var hoverData = dimple.filterData(data, "Park", e.seriesValue[4]);
+            hoverData = dimple.filterData(hoverData, "Year", e.seriesValue[2]);
+            
+            // Creating a new mini chart of Recreation Visitors over Months
+            tipChart = new dimple.chart(svg,  hoverData);
+            tipChart.setBounds(x + 40, y + 35, width - 40, height - 70);
+            
+            
+            // Defining mini chart x axis
+            var x_tipchart = tipChart.addCategoryAxis("x", "Month");
+
+            // Formatting x axis
+            x_tipchart.addOrderRule(["Jan", "Feb", "Mar", "Apr", "May",
+              "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]);
+            x_tipchart.title = "";
+            x_tipchart.fontSize = "8px";
+            x_tipchart.colors = "white";
+
+            // Defining mini chart y axis
+            var y_tipchart = tipChart.addMeasureAxis("y", "Recreation Visitors");
+
+            // Formatting y axis
+            y_tipchart.title = "";
+            y_tipchart.ticks = 5;
+            y_tipchart.fontSize = "8px";
+
+            // Adding a bar series, this can be changed to a line, area or bubble
+            // by changing the plot parameter accordingly.
+            var popUpSeries = tipChart.addSeries("SelectedSeries", dimple.plot.bar);
+
+            // Setting the gap to 30% - just a style preference
+            popUpSeries.barGap = 0.3;
+            
+            // Setting the color to the stroke color of the selected bubble
+            tipChart.assignColor("SelectedSeries", stroke, stroke);
+            
+            // Drawing the mini tooltip chart
+            tipChart.draw();
+            
+          };
+          
+          // Function defined to handle mouse exit
+          
+          function onLeave(e) {
+            
+            // Removing the chart
+            if (tipChart !== null) {
+              tipChart._group.remove();
+            }
+            // Removing the popup
+            if (popup !== null) {
+              popup.remove();
+            }
+          };
+          
+          // Interactive Legend Section
+
+          // This is a critical step.  By doing this we orphan the legend. This
+          // means it will not respond to graph updates.  Without this the legend
+          // will redraw when the chart refreshes removing the unchecked item and
+          // also dropping the events we define below.
+          // Going wild with events
+          
+          myChart.legends = [];
+
+          // This block simply adds the legend title above the legend itself
+          svg.selectAll("title_text")
+            .data(["Click legend to show/hide Parks:"])
+            .enter()
+            .append("text")
+              .attr("x", 420)
+              .attr("y", function (d, i) { return 430 + i * 14; })
+              .style("font-family", "sans-serif")
+              .style("font-size", "10px")
+              .style("color", "Black")
+              .text(function (d) { return d; });
+
+          // Fetches a unique list of Parks to be use for filtering
+          var filterValues = dimple.getUniqueValues(data, "Park");
+          
+          // Gets all the rectangles from our now orphaned legend
+          myLegend.shapes.selectAll("rect")
+            // Add a click event to each rectangle
+            .on("click", function (e) {
+              // This indicates whether the item is already visible or not
+              var hide = false;
+              var newFilters = [];
+              // If the filters contain the clicked shape then hide it
+              filterValues.forEach(function (f) {
+                if (f === e.aggField.slice(-1)[0]) {
+                  hide = true;
+                } else {
+                  newFilters.push(f);
+                }
+              });
+              // Condition to show or hide the shape
+              if (hide) {
+                d3.select(this).style("opacity", 0.2);
+              } else {
+                newFilters.push(e.aggField.slice(-1)[0]);
+                d3.select(this).style("opacity", 0.8);
+              }
+              // Updating the filters
+              filterValues = newFilters;
+              // Filtering  the data
+              myChart.data = dimple.filterData(data, "Park", filterValues);
+              // Passing a duration parameter makes the chart animate. Without
+              // it there is no transition
+              // Displaying the filtered chart
+              myChart.draw(1500);
+            });
+        });
+    </script>
+  </div>
+
+  <section id="para2">
+    <p>
+      It is clearly evident that Smokys are very popular followed by Grand Canyon. Yosemite and Olympic National Park in the 90s attracted almost the same number of reacreational visitors but since 2003 visitation for the later has dropped down. Observing the deatiled monthly distribution for these two parks we see that after 2003 people have not visited Olympic National Park that much outside the summer season, while Yosemite still attracts visitors even in fall and winter.
+    </p>
+    <p>
+      Comparing Rocky Mountain NP and Yellowstone we see that, people visit them mostly in the summers months probably due to the snow cover during rest of year. Having said that, both parks have had considerable dips in visitation when compared to each other. A big dip was observed from 1999 to 2002 for Yellowstone while similar situation was observed for Rocky Mountain NP from 2007 to 2011.
+    </p>
+    <p>
+      Zion, Acadia and Grand Teton have had similar visitation throughout these two decades with all three having almost idetical visitors in 2002. Acadia NP has had constant dips in visitors after 2002 while Zion and Grand Teton have attracted more and more people since then. In fact 2014 was the first time Zion NP crossed the 3.0 million visitor mark. Because of favorable weather conditions in Utah, Zion tends to attract visitors even in the winter months while the other two are not a popular choice in winter.
+    </p>
+    <p>
+      Glacier National Park has starred in the last of the top 10, when it comes to visitors, for the past 20 years mainly because of the high altitude and remote location in Montana. The main attraction is the scenic Going-to-to-the-Sun road which is only open in late July and August. Although, there has been significant increase in viistation since 2011 but there is still a long way to chatch the others.
+    </p>
+
+  </section>
+  <br>
+  <a href = "http://travel.nationalgeographic.com/travel/national-parks/most-visited-parks-photo"><font size = "3" >Source: Top 10 Most Visited National Parks in the US</font></a><br>
+  <a href = "https://irma.nps.gov/Stats/"><font size = "3">Source: National Park Service - Data Archives</font></a>
+</html>
