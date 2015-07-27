@@ -11,13 +11,19 @@
       font-family: verdana;
 
     }
+    h3 {
+
+      text-align: center;
+      font-family: verdana;
+
+    }
     #chartContainer {
       
       text-align: center;
       
     }
 
-    #introduction, #para1, #para2 {
+    #introduction, #para1, #para2, #para3 {
       
       font-family: verdana;
       font-size: 15px;
@@ -39,8 +45,10 @@
 
   </style>
 
-  <section id="content"></section>
-
+  <section id="title"></section>
+  
+  <h3>Introduction</h3>
+  
   <section id="introduction">
     <p>
       The number of people who visit American national parks is mind boggling. In 2014 alone, it was nearly 70 million. 
@@ -67,25 +75,35 @@
 
   <section id="para1">
     <p>
-      Sitting comfortably at number one, Great Smoky Mountains NP attracts more than 10 million people annually, which is more than twice the number of visitors that visited Grand Canyon NP, at number two [4.8 million in 2014]. Both have unique features, one exhibits mountain-skimming scenic highway along with more than 800 miles of hiking trails while the other offers one of the worlds largest canyon at close to a mile in depth and up to 18 miles in width.
+      Sitting comfortably at number one, Great Smoky Mountains NP attracts more than 10 million people annually, which is more than twice the number of visitors that visit Grand Canyon NP, at number two [4.8 million in 2014]. Both have unique features, one exhibits mountain-skimming scenic highways along with more than 800 miles of hiking trails while the other offers one of the worlds largest canyon which is about a mile deep and up to 18 miles wide at certain points.
     </p>
     <p>
-      The two Y's, Yosemite and Yellowstone NPs attract close to 3.5 millions people annually with Yosemite offering great views of the 7 mile, river cut, canyon while Yellowstone offering explosive geysers and wealth of wild animals as is bison, bear and moose. Rocky Mountain National Park in Colorado displays sweeping vistas with close to 150 lakes and 450 miles of wetland streams. Olympic NP in Washington State is unique in a way that no road crosses through the park, which contains distinct ecosystems: temperate rain forest, wildflower meadows and rugged Pacific coast line.
+      The two Y's, Yosemite and Yellowstone National Parks attract close to 3.5 millions people annually with Yosemite offering breathtaking views of the 7 mile, river cut, Yosemite valley while Yellowstone offers explosive naturla geysers and wealth of wild animals such as bison, bear and moose. Rocky Mountain National Park in Colorado displays sweeping vistas with close to 150 lakes and 450 miles of wetland streams. Olympic NP in Washington State is unique in a way that it contains distinct ecosystems: temperate rain forest, wildflower meadows and rugged Pacific coast line, all in one.
     </p>
     <p>
-      Rising in Utah's plateau country, Zion NP attracts close to 3.2 million visitors a year towards its sandstone canyons and sharp cliffs. Grand Tetons, on the other hand stand nearly at 7,000 feet above the valley floor attracting more than 2.8 million poeple towards its white glaciers and granite pinnacles. Acadia on the Atlantic coast is home to one of the best coves in the US while Glacier NP on the other side of the country in Montana exhibits one of the worlds most spectacular drives in Going-to-the-Sun road.
+      Rising in Utah's plateau country, Zion NP attracts close to 3 million visitors every year towards its sandstone canyons and knife-edge cliffs. Grand Tetons, on the other hand stand nearly at 7,000 feet above the valley floor attracting more than 2.8 million people annually towards its white glaciers and granite pinnacles. Acadia on the Atlantic coast is home to one of the best coves in the US while Glacier NP on the other side of the country in Montana exhibits one of the worlds most spectacular drives in Going-to-the-Sun road. All together these parks are a great place for visitors to relax and be close to nature.
     </p>
     <p>
-      The visualization below compares the visitors that visited these parks in the past 20 years. Chart only focuses on the recreational visitors as they take the major chunk of the total visitors. The data used for comparison and analysis is taken from the <a href = " https://irma.nps.gov/Stats/">National Park Service - Data Archives</a>.
+      The visualization below compares the visitors that visited these parks in the past 20 years. Chart only focuses on the recreational visitors as they take the major chunk of the total visitors that visit a particular park. The data used for comparison and analysis is taken from the <a href = " https://irma.nps.gov/Stats/">National Park Service - Data Archives</a>.
     </p>
     <p>
     The interactive legend will help filter the parks and hovering over the yearly node will display with monthly visitation details along with useful park information. NOTE: NP is used as an abbreviation for National Park.
     </p>
   </section>
 
+  <h3>Visualization</h3>
 
-
-
+  <section id="para2">
+    <p>
+      The visualization below compares the visitors that visited these parks in the past 20 years. Chart only focuses on the recreational visitors as they take the major chunk of the total visitors that visit a particular park. The data used for comparison and analysis is taken from the <a href = " https://irma.nps.gov/Stats/">National Park Service - Data Archives</a>.
+    </p>
+    <p>
+    The interactive legend will help filter the parks and hovering over the yearly node will display with monthly visitation details along with useful park information.
+    </p>
+    <p>
+    NOTE: NP is used as an abbreviation for National Park.
+    </p>
+  </section>
 
   </br>
 
@@ -96,7 +114,7 @@
       var svg = dimple.newSvg("#chartContainer", 1000, 500);
 
         // Append title
-        d3.select('#content')
+        d3.select('#title')
           .append('h2')
           .attr('id', 'title')
           .text('Top 10 Most Visited National Parks in US, 1995-2014');
@@ -356,7 +374,7 @@
     </script>
   </div>
 
-  <section id="para2">
+  <section id="para3">
     <p>
       It is clearly evident that Smokys are very popular followed by Grand Canyon. Yosemite and Olympic National Park in the 90s attracted almost the same number of reacreational visitors but since 2003 visitation for the later has dropped down. Observing the deatiled monthly distribution for these two parks we see that after 2003 people have not visited Olympic National Park that much outside the summer season, while Yosemite still attracts visitors even in fall and winter.
     </p>
