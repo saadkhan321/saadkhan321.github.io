@@ -1030,6 +1030,16 @@
 				#header.alt h1 a {
 					color: #ffffff;
 				}
+				
+			#header.alt h2 {
+				color: #ffffff;
+				left: 2.5em;
+				top: 5em;
+			}
+
+				#header.alt h2 a {
+					color: #ffffff;
+				}
 
 			#header.alt nav {
 				right: 2em;
