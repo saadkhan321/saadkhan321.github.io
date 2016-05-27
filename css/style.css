@@ -1049,8 +1049,9 @@
 				
 			#header.alt h2 {
 				color: #ffffff;
-				left: 2.5em;
-				top: 3em;
+				left: 2.0em;
+				top: 2.7em;
+				font-size: 1.0em;
 			}
 
 				#header.alt h2 a {
