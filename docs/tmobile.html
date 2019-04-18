@@ -53,11 +53,11 @@
           // Define a storyboard on the main chart, this will iterate
           // all dates and redraw for each, the callback will build the
           // the background chart
-          charts[1].setStoryboard("Date", function (d) {
+          charts[1].setStoryboard("PERIOD_START_TIME", function (d) {
             // Use the last date variable to manage the previous tick's data
             if (lastDate !== null) {
               // Pull the previous data
-              var lastData = dimple.filterData(data, "Date", lastDate);
+              var lastData = dimple.filterData(data, "PERIOD_START_TIME", lastDate);
               // Add a series to the background chart to display old position
               var lastSeries = charts[0].addSeries("CELL", dimple.plot.bubble);
               // Average suits these measures better
