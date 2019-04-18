@@ -7,11 +7,11 @@
     d3.tsv("tmobile.tsv", function (data) {
 
       // Reduce the number of owners as this chart can get a bit busy
-     //data = dimple.filterData(data, "Owner", [
-     //   "Stark Ind",
-     //   "MomCorp",
-     //   "Rekall",
-     //   "Wayne Ent"]);
+      data = dimple.filterData(data, "CELL", [
+        "LSP09039B11",
+        "LSP09039B21",
+        "LSP09039B31",
+        "LSP09039B41"]);
 
       var series,
         // Set a background and foreground chart
